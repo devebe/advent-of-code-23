@@ -1,6 +1,6 @@
 import {readFileSync} from "fs";
 
-let text = readFileSync('./test.txt', 'utf-8').toString().split('\n');
+let text = readFileSync('./input.txt', 'utf-8').toString().split('\n');
 let winningNumbers = [];
 let scratchNumbers = [];
 
@@ -48,7 +48,7 @@ let numberOfMatches = [];
 
 for (let i = 0; i < formattedWinNumbers.length; i++) {
     let intersection = formattedWinNumbers[i].filter(el => formattedScrNumbers[i].includes(el));
-    numberOfMatches.push([i , intersection.length]);
+    numberOfMatches.push([i , intersection.length, 1]);
     if (intersection.length >= 1) {
         let score = 2 ** (intersection.length - 1);
         scratchScore.push(score);
@@ -59,12 +59,27 @@ for (let i = 0; i < formattedWinNumbers.length; i++) {
     }
 };
 
-console.log(numberOfMatches);
+
+for (let i = 0; i < numberOfMatches.length; i++) {
+    for (let j = 0; j < numberOfMatches[i][1]; j++) {
+        for (let k = 0; k < numberOfMatches[i][2]; k++) {
+            numberOfMatches[(i + j + 1)][2] += 1;
+        }
+    }
+}
+
+console.log(numberOfMatches)
 
 let scratchCards = [];
 
+numberOfMatches.forEach(item => {
+    scratchCards.push(item[2]);
+})
 
+console.log(scratchCards);
 
 const sum = scratchScore.reduce((partialSum, a) => partialSum + a, 0);
 
-console.log(sum);
+const sum2 = scratchCards.reduce((partialSum, a) => partialSum + a, 0);
+
+console.log(sum, sum2);
