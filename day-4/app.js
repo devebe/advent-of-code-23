@@ -19,7 +19,7 @@ let formattedWinNumbers = [];
 for (let i = 0; i < winningNumbers.length; i++) {
     let first = 1;
     let last = 2;
-    let array = []
+    let array = [];
     for (let j = 0; j < (winningNumbers[1].length / 3); j++) { 
         let number = parseInt(winningNumbers[i][first] + winningNumbers[i][last]);
         array.push(number);
