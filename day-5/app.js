@@ -1,6 +1,6 @@
 import { readFileSync } from "fs";
 
-let text = readFileSync('./test.txt', 'utf-8').toString();
+let text = readFileSync('./input.txt', 'utf-8').toString();
 let lines = text.split('\n\n');
 let inputNumbers = lines.shift().split(':')[1].trimStart().split(" ");
 let inputs = [];
@@ -23,7 +23,7 @@ for (let i = 0; i < mappings.length; i++) {
     conditions.push(array);
 };
 
-function findLocation(num, array) { 
+export function findLocation(num, array) { 
     let result1 = applyMap(num, array[0]);
     // console.log(result1, array[0]);
     let result2 = applyMap(result1, array[1]);

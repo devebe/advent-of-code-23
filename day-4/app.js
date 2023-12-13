@@ -59,7 +59,6 @@ for (let i = 0; i < formattedWinNumbers.length; i++) {
     }
 };
 
-
 for (let i = 0; i < numberOfMatches.length; i++) {
     for (let j = 0; j < numberOfMatches[i][1]; j++) {
         for (let k = 0; k < numberOfMatches[i][2]; k++) {
