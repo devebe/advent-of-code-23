@@ -52,28 +52,26 @@ for (let i = 0; i < formattedWinNumbers.length; i++) {
     if (intersection.length >= 1) {
         let score = 2 ** (intersection.length - 1);
         scratchScore.push(score);
-    };
+    }
     if (intersection.length == 0) {
         let score = 0;
         scratchScore.push(score);
-    }
+    };
 };
 
 for (let i = 0; i < numberOfMatches.length; i++) {
     for (let j = 0; j < numberOfMatches[i][1]; j++) {
         for (let k = 0; k < numberOfMatches[i][2]; k++) {
             numberOfMatches[(i + j + 1)][2] += 1;
-        }
-    }
-}
-
-console.log(numberOfMatches)
+        };
+    };
+};
 
 let scratchCards = [];
 
 numberOfMatches.forEach(item => {
     scratchCards.push(item[2]);
-})
+});
 
 console.log(scratchCards);
 
