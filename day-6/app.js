@@ -40,4 +40,4 @@ const evaluatePuzzleInput = (array) => {
 let puzzleInputPart1 = [[40, 219],[81, 1012],[77,1365],[72,1089]];
 evaluatePuzzleInput(puzzleInputPart1);
 
-numberOfWaysToBeatRecord(40817772,219101213651089);
+console.log(numberOfWaysToBeatRecord(40817772,219101213651089));
