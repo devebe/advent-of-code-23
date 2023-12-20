@@ -109,8 +109,11 @@ const collectAsterisks = (array) => {
         for (let j = 0; j < array.length; j++) {
             if (asterisk.test(array[i][j])) {
                 let coordinate = i + ',' + j;
-                newArray.push(coordinate);
-            }
+                let neighbours = getAllNeighbours([[i,j]]);
+                let matches = 0;
+                let numbers = [];
+                newArray.push([coordinate, neighbours, matches, numbers]);
+            };
         };
     };
     return newArray;
@@ -127,17 +130,31 @@ const sumUpValidNumbers = (numbers, chars) => {
     return result;
 };
 
-const sumofValidGears = (asterisks, numbers) => {
+const sumUpProductsOfValidNumbers = (asterisks, numbers) => {
     let result = 0;
+    let newArray = [];
     asterisks.forEach(asterisk => {
-        
+        numbers.forEach(number => {
+            let intersection = asterisk[1].filter(element => number[1].includes(element));
+            if (intersection.length > 0) {
+                asterisk[2] += 1;
+                asterisk[3].push(number[0]);
+            };
+        });
+        newArray.push(asterisk);
+    });
+    let arr2 = newArray.filter(el => el[2] == 2);
+    arr2.forEach(el => {
+        result += el[3].reduce((a,b) => a * b);
     })
+    return console.log(result);
 }
 
-let input = readFileSync('./test.txt', 'utf-8').toString().split('\n');
+let input = readFileSync('./input.txt', 'utf-8').toString().split('\n');
 let matrix = createMatrix(input);
 let numbers = collectNumbers(matrix);
-let chars = collectAsterisks(matrix);
+let asts = collectAsterisks(matrix);
+let chars = collectSpecialChars(matrix);
 
-console.log(chars);
-// console.log(sumUpValidNumbers(numbers, chars));
+sumUpProductsOfValidNumbers(asts, numbers);
+console.log(sumUpValidNumbers(numbers, chars));
