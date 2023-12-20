@@ -12,6 +12,78 @@ const binaryMapOf = (string) => {
     return map;
 };
 
+const valueMapof = (string) => {
+    let array = string.split('');
+    let map = [];
+    for (let i = 0; i < array.length; i++) {
+        map.push([array[i], (i + 1)]);
+    };
+    return map;
+};
+
+const cardsToAdjustedTypeConverter = (string) => {
+    let map = valueMapof(cardValues);
+    let array = string.split('');
+    let conversion = [];
+    for (let i = 0; i < array.length; i++) {
+        convertSourceValueToMapValue(array[i], map, conversion);
+    };
+    let uniqueElements = [...new Set(conversion)];
+    const counts = uniqueElements.map(value => [value, conversion.filter(str => str === value).length]);
+    return transformTheJokers(counts);
+};
+
+const transformTheJokers = (array) => {
+    let newarray = [];
+    array.forEach(el => {
+        newarray.push(el[0]);
+    });
+    let outcome = Math.max(...newarray);
+    let amount = 0;
+    let index = 0;
+    array.forEach(el => {
+        if (el[0] == 1) {
+            amount = el[1];
+            index = array.indexOf(el);
+            let transformedArray = array.splice(index, 1);
+        };
+    });
+    array.forEach(el => {
+        if (el[0] == outcome) {
+            el[1] += amount;
+        };
+    });
+    if (array.length == 5) {
+        return 1; // high card
+    }
+    if (array.length == 4) {
+        return 2; // one pair
+    }
+    if (array.length == 3) {
+        for (let i = 0; i < array.length; i++) {
+            if (array[i][1] == 2) {
+                return 3; // two pair
+            };
+            if (array[i][1] == 3) {
+                return 4; // three of a kind
+            };
+        };
+    }
+    if (array.length == 2) {
+        for (let i = 0; i < array.length; i++) {
+            if (array[i][1] == 3) {
+                return 5; // full house
+            };
+            if (array[i][1] == 4) {
+                return 6; // four of a kind
+            };
+        };
+    };
+    if (array.length == 1) {
+        return 7; // five of a kind
+    };
+};
+
 const isValidCardValue = (string) => {
     let regex = /[\dTJKQA]/;
     if (regex.test(string)) return true; 
@@ -94,7 +166,19 @@ class SortableObject {
         this.cards = array[0];
         this.bid = parseInt(array[1]);
         this.score = cardsToScoreConverter(array[0]);
-        this.type = typeOfHand(array[0]);
+        this.type = this.getType(array[0]);
+    }
+
+    getType(string) {
+        if (typeOfHand(string) > cardsToAdjustedTypeConverter(string)) {
+            return typeOfHand(string);
+        }
+        if (typeOfHand(string) < cardsToAdjustedTypeConverter(string)) {
+            return cardsToAdjustedTypeConverter(string);
+        }
+        if (typeOfHand(string) == cardsToAdjustedTypeConverter(string)) {
+            return typeOfHand(string);
+        };
     };
 };
 
@@ -124,13 +208,15 @@ const calculateWinnings = (array, newarray) => {
 let camelCards = textProcessor(text);
 let sortedArray = [];
 convertToSortedObjectArray(camelCards, sortedArray);
-console.log(sortedArray);
+console.log(sortedArray[100]);
 
 let scoresArray = [];
 calculateWinnings(sortedArray, scoresArray);
 
-console.log(scoresArray);
+// console.log(scoresArray);
 
 let sum = scoresArray.reduce((a, b) => a + b);
 
 console.log(sum);
+// console.log(cardsToAdjustedTypeConverter(sortedArray[100][0]));
+// console.log(typeOfHand(sortedArray[100][0]));
