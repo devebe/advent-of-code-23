@@ -2,61 +2,48 @@ import { readFileSync } from "fs";
 
 const createMatrix = (array) => {
     let newArray = [];
-    array.forEach(el => {
-        newArray.push(el.split(''));
+    array.forEach(el => newArray.push(el.split('')));
+    return newArray;
+};
+
+const generateDuplicateCoordinates = (array) => {
+    let newArray = [];
+    array.forEach(coordinate => {
+        newArray.push(coordinate[0] + ',' + coordinate[1]);
     });
     return newArray;
 };
 
+const generateAdjacentCoordinates = (array, destinationArray) => {
+    array.forEach(coordinate => {
+        let y = coordinate[0];
+        let x = coordinate[1];
+        for (let i = -1; i < 2; i++) {
+            let yResult = y + i;
+            for (let j = -1; j < 2; j++) {
+                let xResult = x + j;
+                if (xResult >= 0 && yResult >= 0) {
+                    destinationArray.push(yResult + ',' + xResult);
+                };
+            };
+        };
+    });
+};
+
+const deduplicateCoordinates = (set, duplicatesArray) => {
+    duplicatesArray.forEach(el => set.delete(el));
+}
+
 const getAllNeighbours = (array) => {
     let newArray = [];
-    let duplicates = [];
-    array.forEach(subarray => {
-        duplicates.push(subarray[0] + ',' + subarray[1]);
-    });
-    for (let h = 0; h < array.length; h++) {
-        for (let i = -1; i <= 1;) {
-            let x = array[h][1]
-            let y = array[h][0] + i;
-            if (x >= 0 && y >= 0 && x <= 139 && y <= 139) {
-                newArray.push(y + ',' + x);
-                
-            };
-            i = i + 2;
-        }
-        for (let i = -1; i <= 1;) {
-            let y = array[h][0]
-            let x = array[h][1] + i;
-            if (x >= 0 && y >= 0 && x <= 139 && y <= 139) {
-                newArray.push(y + ',' + x);
-            };
-            i = i + 2;
-        }
-        for (let i = -1; i <= 1;) {
-            let y = array[h][0] + i
-            let x = array[h][1] + i;
-            if (x >= 0 && y >= 0 && x <= 139 && y <= 139) {
-                newArray.push(y + ',' + x);
-            };
-            i = i + 2;
-        }
-        for (let i = -1; i <= 1;) {
-            let y = array[h][0] + i
-            let x = array[h][1] - i;
-            if (x >= 0 && y >= 0 && x <= 139 && y <= 139) {
-                newArray.push(y + ',' + x);
-            };
-            i = i + 2;
-        }
-    }
+    let duplicates = generateDuplicateCoordinates(array);
+    generateAdjacentCoordinates(array, newArray);
     let set = new Set(newArray);
-    duplicates.forEach(el => {
-        set.delete(el);
-    })
+    deduplicateCoordinates(set, duplicates);
     return [...set];
 }
 
-const collectNumbers = (array) => {
+const findNumbers = (array) => {
     const num = /[\d]/;
     let newArray = [];
     for (let i = 0; i < array.length; i++) {
@@ -88,7 +75,7 @@ const collectNumbers = (array) => {
     return newArray;
 };
 
-const collectSpecialChars = (array) => {
+const findSpecialChars = (array) => {
     let spChar = /[^\d\w\.]/;
     let newArray = [];
     for (let i = 0; i < array.length; i++) {
@@ -102,7 +89,7 @@ const collectSpecialChars = (array) => {
     return newArray;
 };
 
-const collectAsterisks = (array) => {
+const findAsterisks = (array) => {
     let asterisk = /[*]/;
     let newArray = [];
     for (let i = 0; i < array.length; i++) {
@@ -147,14 +134,17 @@ const sumUpProductsOfValidNumbers = (asterisks, numbers) => {
     arr2.forEach(el => {
         result += el[3].reduce((a,b) => a * b);
     })
-    return console.log(result);
+    return result;
 }
 
-let input = readFileSync('./input.txt', 'utf-8').toString().split('\n');
-let matrix = createMatrix(input);
-let numbers = collectNumbers(matrix);
-let asts = collectAsterisks(matrix);
-let chars = collectSpecialChars(matrix);
+const main = () => {
+    let input = readFileSync('./input.txt', 'utf-8').toString().split('\n');
+    let matrix = createMatrix(input);
+    let numbers = findNumbers(matrix);
+    let asts = findAsterisks(matrix);
+    let chars = findSpecialChars(matrix);
 
-sumUpProductsOfValidNumbers(asts, numbers);
-console.log(sumUpValidNumbers(numbers, chars));
+    return console.log(sumUpValidNumbers(numbers, chars), sumUpProductsOfValidNumbers(asts, numbers));
+};
+
+main();
